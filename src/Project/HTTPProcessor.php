@@ -20,4 +20,13 @@ class HTTPProcessor extends \PHPixie\HTTPProcessors\Processor\Dispatcher\Builder
             $components->template()    
         );
     }
+    
+    protected function buildActProcessor()
+    {
+        $components = $this->builder->components();
+        
+        return new HTTPProcessors\Act(
+            $components->template()    
+        );
+    }
 }
