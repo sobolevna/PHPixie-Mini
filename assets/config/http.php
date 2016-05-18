@@ -7,14 +7,14 @@ return array(
     'resolver' => array(
         'type' => 'group',
         'resolvers' => array(
-            'default' => array(
+            /*'default' => array(
                 'type'     => 'pattern',
-                'path'     => '(<processor>(/<action>))',
+                'path'     => '(<action>)',
                 'defaults' => array(
-                    'processor' => 'greet',
+                    'processor' => 'act',
                     'action'    => 'default'
                 )
-            )
+            )*/
         )
     ),
     'exceptionResponse' => array(

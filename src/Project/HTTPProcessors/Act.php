@@ -23,23 +23,45 @@
  *
  * @author sobolev
  */
+
 namespace Project\HTTPProcessors;
 
-class Greet extends \PHPixie\HTTPProcessors\Processor\Actions\Attribute
-{
-    protected $template;
-    
-    public $actions;
+class Act {
 
-    public function __construct($template)
-    {
+    protected $template;
+    private $functions = array();
+
+    public function __construct($template) {
         $this->template = $template;
     }
-    
-    public function defaultAction($request)
-    {
+
+    public function __set($name, $data) {
+        if (is_callable($data)) {
+            $this->functions[$name] = $data;
+        } else
+            $this->$name = $data;
+    }
+
+    public function __call($method, $args) {
+        if (isset($this->functions[$method])) {
+            return call_user_func_array($this->functions[$method], $args);
+        }
+    }
+
+    public function isProcessable($request) {
+        $action = $request->attributes()->get('action');
+        return isset($this->functions[$action.'Action']);
+    }
+
+    public function process($request) {
+        $action = $request->attributes()->get('action');
+        return $this->functions[$action.'Action']($request);
+    }
+
+    public function defaultAction($request) {
         $container = $this->template->get('greet');
         $container->message = "Have fun coding!";
         return $container;
     }
+
 }

@@ -28,16 +28,6 @@ class Configuration implements \PHPixie\Framework\Configuration {
     }
 
     public function httpConfig() {
-        $ret = $this->instance('httpConfig')->slice('resolver.resolvers');
-        $ret->set('r1', array(
-                'type'     => 'pattern',
-                'path'     => '(<processor>(/<action>))',
-                'defaults' => array(
-                    'processor' => 'greet',
-                    'action'    => 'default'
-                )
-            ));
-        var_dump($ret->getData('r1')['defaults']);
         return $this->instance('httpConfig');
     }
 
