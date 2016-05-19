@@ -7,6 +7,14 @@ class Framework extends \PHPixie\Framework {
     protected $routeCount = array();
 
     /**
+     * Constructor
+     */
+    public function __construct($root = null) {
+        $root = !$root ? $_SERVER['DOCUMENT_ROOT'] : $root;
+        $this->builder = $this->buildBuilder($root);
+    }
+
+    /**
      * 
      * @return \Project\Framework\Builder
      */
@@ -21,15 +29,14 @@ class Framework extends \PHPixie\Framework {
         $id = $this->routeCount[$cnt];
         $config = $this->builder->configuration()->httpConfig()->slice('resolver.resolvers');
         $config->set(
-            $id, 
-            array(
-                'type' => 'pattern',
-                'path' => $pattern, 
-                'defaults' => array(
-                    'processor' => 'act', 
-                    'action' => $id
-                )
+                $id, array(
+            'type' => 'pattern',
+            'path' => $pattern,
+            'defaults' => array(
+                'processor' => 'act',
+                'action' => $id
             )
+                )
         );
         echo '<pre>';
         //print_r($this->builder->configuration()->httpConfig()->getData());
