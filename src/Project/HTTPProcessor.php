@@ -2,32 +2,28 @@
 
 namespace Project;
 
-class HTTPProcessor extends \PHPixie\HTTPProcessors\Processor\Dispatcher\Builder\Attribute
-{
+class HTTPProcessor extends \PHPixie\HTTPProcessors\Processor\Dispatcher\Builder\Attribute {
+
     protected $builder;
     protected $attribute = 'processor';
-    
-    public function __construct($builder)
-    {
+
+    public function __construct($builder) {
         $this->builder = $builder;
     }
-    
-    protected function buildGreetProcessor()
-    {
+
+    protected function buildGreetProcessor() {
         $components = $this->builder->components();
-        
+
         return new HTTPProcessors\Greet(
-            $components->template()    
+                $components->template()
         );
     }
-    
-    protected function buildActProcessor()
-    {
-        $components = $this->builder->components();
-        
+
+    protected function buildActProcessor() {
+
         return new HTTPProcessors\Act(
-            $components->template()    
+                $this->builder
         );
     }
-    
+
 }

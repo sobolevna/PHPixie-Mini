@@ -20,7 +20,7 @@ class Configuration implements \PHPixie\Framework\Configuration {
     }
     
     public function imageDefaultDriver() {
-        
+        return $this->configStorage()->get('image.defaultDriver', 'gd');
     }
     
     public function databaseConfig() {

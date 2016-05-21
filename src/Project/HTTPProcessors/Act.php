@@ -26,13 +26,13 @@
 
 namespace Project\HTTPProcessors;
 
-class Act {
+class Act extends \PHPixie\HTTPProcessors\Processor\Actions\Attribute {
 
     protected $template;
     private $functions = array();
 
-    public function __construct($template) {
-        $this->template = $template;
+    public function __construct($builder) {
+        $this->builder = $builder;
     }
 
     public function __set($name, $data) {
@@ -44,8 +44,10 @@ class Act {
 
     public function __call($method, $args) {
         if (isset($this->functions[$method])) {
+            $args[] = &$this;
             return call_user_func_array($this->functions[$method], $args);
         }
+        return call_user_func_array($this->$method, $args);
     }
 
     public function isProcessable($request) {

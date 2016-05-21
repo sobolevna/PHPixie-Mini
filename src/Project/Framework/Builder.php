@@ -5,11 +5,7 @@ namespace Project\Framework;
 class Builder extends \PHPixie\Framework\Builder {
     
     public $root;
-    
-    public function __construct($root) {
-        $this->root = $root;
-    }
-
+  
     public function configuration() {
         return $this->instance('configuration');
     }
@@ -19,7 +15,7 @@ class Builder extends \PHPixie\Framework\Builder {
     }
 
     protected function getRootDirectory() {
-        return realpath(__DIR__ . '/../../../');
+        return realpath($root);
     }
 
 }

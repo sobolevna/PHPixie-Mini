@@ -7,14 +7,6 @@ class Framework extends \PHPixie\Framework {
     protected $routeCount = array();
 
     /**
-     * Constructor
-     */
-    public function __construct($root = null) {
-        $root = !$root ? $_SERVER['DOCUMENT_ROOT'] : $root;
-        $this->builder = $this->buildBuilder($root);
-    }
-
-    /**
      * 
      * @return \Project\Framework\Builder
      */
@@ -22,27 +14,83 @@ class Framework extends \PHPixie\Framework {
         return new Framework\Builder();
     }
 
+    /**
+     * 
+     * @param string $pattern -- pattern in standard PHPixie format
+     * @param function $func -- a callback that must have a single param -- Request $request
+     * It works like method of PHPixie\HTTPProcessor\Action
+     */
     public function route($pattern, $func) {
         $pattern = $pattern[0] == '/' ? substr($pattern, 1) : $pattern;
         $cnt = count($this->routeCount);
         $this->routeCount[] = 'r' . $cnt;
         $id = $this->routeCount[$cnt];
-        $config = $this->builder->configuration()->httpConfig()->slice('resolver.resolvers');
+        $config = $this->builder->configuration()
+                ->httpConfig()->slice('resolver.resolvers');
         $config->set(
-                $id, array(
-            'type' => 'pattern',
-            'path' => $pattern,
-            'defaults' => array(
-                'processor' => 'act',
-                'action' => $id
-            )
+            $id, array(
+                'type' => 'pattern',
+                'path' => $pattern,
+                'defaults' => array(
+                    'processor' => 'act',
+                    'action' => $id
                 )
+            )
         );
-        echo '<pre>';
-        //print_r($this->builder->configuration()->httpConfig()->getData());
-        echo '</pre>';
-        $proc = $this->builder->configuration()->httpProcessor()->processor('act');
-        $proc->{$id . 'Action'} = $func;
+        $proc = $this->builder->configuration()
+                ->httpProcessor()->processor('act');
+        $proc->{$id . 'Action'} = \Closure::bind($func, $proc);
     }
 
+    /**
+     * 
+     * @param string $name Connection name
+     * @param array $config Configuration data in PHPixie format. Is to contain 
+     * such fields as <b>driver</b>, <b>connection</b>, <b>user</b> 
+     * and <b>password</b> (the last two are unneeded for SQLite)
+     */
+    public function confugureDB($name, array $config) {
+        $this->builder->configuration()->databaseConfig()->set($name, $config);        
+    }
+    
+    /**
+     * 
+     * @param string $name ORM Model name
+     * @param array $config Configuration data in PHPixie format.
+     */
+    public function ormModel($name, array $config) {
+        $this->builder->configuration()->ormConfig()
+                ->slice('models')->set($name, $config);
+    }
+    
+    /**
+     * 
+     * @param array $config Configuration data in PHPixie format.
+     */
+    public function ormRelationship(array $config) {
+        $conf = $this->builder->configuration()->ormConfig()->get('relationships');
+        $conf[] = $config;
+        $this->builder->configuration()->ormConfig()->set('relationships', $conf);
+    }
+
+    /**
+     * 
+     * @param string $type Type of a wrapper -- the only options are:
+     *  'repository', 'entity', 'embeddedEntity' and 'query'
+     * @param string $name Wrapper name
+     * @param function $func Function that must return an instance of \PHPixie\ORM\Wrappers\Type\Database
+     */
+    public function wrapORM($type, $name, $func) {
+        if (in_array(
+            $type, 
+            array('repository', 'entity', 'embeddedEntity', 'query')
+            )
+        ) {
+            $wrappers = $this->builder()->configuration()->ormWrappers();
+            $wrappers->{'make' . ucfirst($type)}($name, $func);
+        } else {
+            throw new PHPixie\ORM\Exception\Builder('Invalid wrapper type');
+        }
+    }
+    
 }
