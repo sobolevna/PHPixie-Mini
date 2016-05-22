@@ -5,6 +5,9 @@ namespace Project;
 class ORMWrappers extends \PHPixie\ORM\Wrappers\Implementation {
 
     protected $functions = array();
+    
+    protected $databaseEntities = array('user');
+    protected $databaseRepositories = array('user');
 
     public function __set($name, $data) {
         if (is_callable($data)) {
@@ -40,5 +43,15 @@ class ORMWrappers extends \PHPixie\ORM\Wrappers\Implementation {
     public function makeEmbeddedEntity($name, $func) {
         $this->embeddedEntities[] = $name;
         $this->{$name.'Entity'} = $func;
+    }
+    
+    public function userEntity($entity)
+    {
+        return new ORMWrappers\User\Entity($entity);
+    }
+
+    public function userRepository($repository)
+    {
+        return new ORMWrappers\User\Repository($repository);
     }
 }

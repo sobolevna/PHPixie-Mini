@@ -14,15 +14,15 @@ class Configuration implements \PHPixie\Framework\Configuration {
     public function authConfig() {
         return $this->instance('authConfig');
     }
-    
+
     public function authRepositories() {
-        
+        $this->instance('authRepositories');
     }
-    
+
     public function imageDefaultDriver() {
         return $this->configStorage()->get('image.defaultDriver', 'gd');
     }
-    
+
     public function databaseConfig() {
         return $this->instance('databaseConfig');
     }
@@ -120,11 +120,44 @@ class Configuration implements \PHPixie\Framework\Configuration {
 
     protected function buildTemplateLocator() {
         $components = $this->builder->components();
+        $userTpl = realpath($_SERVER['DOCUMENT_ROOT']);
+        if (is_dir($userTpl . '/template')) {
 
-        $config = $this->configStorage()->slice('template.locator');
-        return $components->filesystem()->buildLocator(
-                        $config, $this->filesystemRoot()
-        );
+            $config1 = $this->configStorage()->slice('template.locator');
+            $root1 = $this->filesystemRoot();
+            $locator1 = $components->filesystem()->buildLocator(
+                    $config1, $root1
+            );
+
+            $config2 = $components->slice()->arrayData(array(
+                'type' => 'directory',
+                'directory' => 'template'
+            ));
+            $root2 = $components->filesystem()->root($userTpl);
+//            var_dump($config2);
+            $locator2 = $components->filesystem()->buildLocator(
+                    $config2, $root2
+            );
+//            var_dump($locator2);
+            $settings = ['loc1' => $locator1, 'loc2' => $locator2];
+            $locatorConfig = $components->slice()->arrayData(array(
+                'type' => 'group',
+                'locators' => [
+                    [ 'type' => 'mount',
+                        'name' => 'loc1'],
+                    [ 'type' => 'mount',
+                        'name' => 'loc2']
+                ]
+            ));
+            return $components->filesystem()->buildlocator(
+                            $locatorConfig, $root1, new \Project\TemplateLocator($settings)
+            );
+        } else {
+            $config = $this->configStorage()->slice('template.locator');
+            return $components->filesystem()->buildLocator(
+                            $config, $this->filesystemRoot()
+            );
+        }
     }
 
     protected function configStorage() {
@@ -138,8 +171,12 @@ class Configuration implements \PHPixie\Framework\Configuration {
                         $this->assetsRoot()->path(), 'config'
         );
     }
-    
+
     protected function buildAuthConfig() {
         return $this->configStorage()->slice('auth');
+    }
+
+    protected function buildAuthRepositories() {
+        return new \Project\AuthRepositories();
     }
 }

@@ -21,12 +21,12 @@ class Framework extends \PHPixie\Framework {
      * It works like method of PHPixie\HTTPProcessor\Action
      */
     public function route($pattern, $func) {
-        $pattern = $pattern[0] == '/' ? substr($pattern, 1) : $pattern;
+        $pattern = $pattern && $pattern[0] == '/' ? substr($pattern, 1) : $pattern;
         $cnt = count($this->routeCount);
         $this->routeCount[] = 'r' . $cnt;
         $id = $this->routeCount[$cnt];
         $config = $this->builder->configuration()
-                ->httpConfig()->slice('resolver.resolvers');
+                        ->httpConfig()->slice('resolver.resolvers');
         $config->set(
             $id, array(
                 'type' => 'pattern',
@@ -38,7 +38,7 @@ class Framework extends \PHPixie\Framework {
             )
         );
         $proc = $this->builder->configuration()
-                ->httpProcessor()->processor('act');
+                        ->httpProcessor()->processor('act');
         $proc->{$id . 'Action'} = \Closure::bind($func, $proc);
     }
 
@@ -50,9 +50,10 @@ class Framework extends \PHPixie\Framework {
      * and <b>password</b> (the last two are unneeded for SQLite)
      */
     public function confugureDB($name, array $config) {
-        $this->builder->configuration()->databaseConfig()->set($name, $config);        
+        $this->sanitizeDB($config);
+        $this->builder->configuration()->databaseConfig()->set($name, $config);
     }
-    
+
     /**
      * 
      * @param string $name ORM Model name
@@ -62,12 +63,17 @@ class Framework extends \PHPixie\Framework {
         $this->builder->configuration()->ormConfig()
                 ->slice('models')->set($name, $config);
     }
-    
+
     /**
      * 
      * @param array $config Configuration data in PHPixie format.
      */
     public function ormRelationship(array $config) {
+        try {
+            $this->sanitizeORM($config);
+        } catch (\PHPixie\ORM\Exception\Relationship $ex) {
+            $ex->getMessage();
+        }
         $conf = $this->builder->configuration()->ormConfig()->get('relationships');
         $conf[] = $config;
         $this->builder->configuration()->ormConfig()->set('relationships', $conf);
@@ -82,8 +88,7 @@ class Framework extends \PHPixie\Framework {
      */
     public function wrapORM($type, $name, $func) {
         if (in_array(
-            $type, 
-            array('repository', 'entity', 'embeddedEntity', 'query')
+                $type, array('repository', 'entity', 'embeddedEntity', 'query')
             )
         ) {
             $wrappers = $this->builder()->configuration()->ormWrappers();
@@ -92,5 +97,55 @@ class Framework extends \PHPixie\Framework {
             throw new PHPixie\ORM\Exception\Builder('Invalid wrapper type');
         }
     }
+
+    public function setAuthProviders($name, $config) {
+        $this->builder->configuration()->authConfig()
+                ->slice('domains.default.provider')->set($name, $config);
+    }
+
+    protected function sanitizeORM(array $config) {
+        if (($config['type'] == 'oneToMany' || $config['type'] == 'oneToOne'
+                || $config['type'] == 'embedsMany') 
+                && array_key_exists('owner', $config) 
+                && array_key_exists('items', $config)
+        ) {
+            return true;
+        } 
+        elseif ($config['type'] == 'manyToMany' 
+                && \array_key_exists('left', $config) 
+                && \array_key_exists('right', $config)
+        ) {
+            return true;
+        } 
+        elseif ($config['type'] == 'embedsOne' 
+                && array_key_exists('owner', $config) 
+                && \array_key_exists('item', $config)
+        ) {
+            return true;
+        } 
+        elseif ($config['type'] == 'nestedSet' && \array_key_exists('model', $config)
+        ) {
+            return true;
+        } 
+        throw new \PHPixie\ORM\Exception\Relationship(
+            'Invalid ORM relationships configuration'
+        );
+        
+    }
     
+    protected function sanitizeDB(array $config) {
+        if (array_key_exists('driver', $config)) {
+            if (array_key_exists('driver', $config)) {
+                return true;
+            }
+            elseif ($config['driver'] == 'mongo'
+                    && array_key_exists('database', $config)) {
+                return true;
+            }
+        }
+        throw new \PHPixie\Database\Exception\Builder(
+                'Invalid database configuration'
+        );
+    }
+
 }

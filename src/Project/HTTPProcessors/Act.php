@@ -44,7 +44,6 @@ class Act extends \PHPixie\HTTPProcessors\Processor\Actions\Attribute {
 
     public function __call($method, $args) {
         if (isset($this->functions[$method])) {
-            $args[] = &$this;
             return call_user_func_array($this->functions[$method], $args);
         }
         return call_user_func_array($this->$method, $args);
@@ -64,6 +63,11 @@ class Act extends \PHPixie\HTTPProcessors\Processor\Actions\Attribute {
         $container = $this->template->get('greet');
         $container->message = "Have fun coding!";
         return $container;
+    }
+    
+    protected function domain() {
+        $auth = $this->builder->components()->auth();
+        return $auth->domain();
     }
 
 }
