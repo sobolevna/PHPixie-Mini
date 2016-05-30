@@ -20,7 +20,7 @@ class Configuration implements \PHPixie\Framework\Configuration {
     }
 
     public function imageDefaultDriver() {
-        return $this->configStorage()->get('image.defaultDriver', 'gd');
+        $this->instance('imageDefaultDriver');
     }
 
     public function databaseConfig() {
@@ -177,6 +177,10 @@ class Configuration implements \PHPixie\Framework\Configuration {
     }
 
     protected function buildAuthRepositories() {
-        return new \Project\AuthRepositories();
+        return new \Project\Framework\AuthRepositories($this->builder);
+    }
+    
+    public function buildImageDefaultDriver() {
+        return $this->configStorage()->get('image.defaultDriver', 'gd');
     }
 }
