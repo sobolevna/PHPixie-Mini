@@ -12,8 +12,17 @@ class ORMWrappers extends \PHPixie\ORM\Wrappers\Implementation {
     public function __set($name, $data) {
         if (is_callable($data)) {
             $this->functions[$name] = \Closure::bind($data, $this);
-        } else
+        } else {
             $this->$name = $data;
+        }
+    }
+    
+    public function __get($name) {
+        if (property_exists($this, $name)) {
+            return $this->$name;
+        } elseif (array_key_exists($name, $array)) {
+            return $this->functions[$name];
+        }
     }
     
     public function __call($method, $args) {

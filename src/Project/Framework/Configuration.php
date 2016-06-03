@@ -62,6 +62,10 @@ class Configuration implements \PHPixie\Framework\Configuration {
     public function templateLocator() {
         return $this->instance('templateLocator');
     }
+    
+    public function socialConfig() {
+        return $this->instance('socialConfig');
+    }
 
     protected function instance($name) {
         if (!array_key_exists($name, $this->instances)) {
@@ -160,7 +164,7 @@ class Configuration implements \PHPixie\Framework\Configuration {
         }
     }
 
-    protected function configStorage() {
+    public function configStorage() {
         return $this->instance('configStorage');
     }
 
@@ -180,7 +184,11 @@ class Configuration implements \PHPixie\Framework\Configuration {
         return new \Project\Framework\AuthRepositories($this->builder);
     }
     
-    public function buildImageDefaultDriver() {
+    protected function buildImageDefaultDriver() {
         return $this->configStorage()->get('image.defaultDriver', 'gd');
+    }
+    
+    protected function buildSocialConfig() {
+        return $this->configStorage()->get('social');
     }
 }

@@ -23,12 +23,12 @@ class Framework extends \PHPixie\Framework {
     public function route($pattern, $func) {
         if (!is_callable($func)) {
             throw new \PHPixie\HTTPProcessors\Exception(
-            'Invalid callback for method'
+            'Invalid callback for action'
             );
         }
-        if ($pattern && !(is_string($pattern) || is_numeric($pattern))) {
+        if (!(is_string($pattern) || is_numeric($pattern))) {
             throw new \PHPixie\Route\Exception\Route(
-                'Invalid route pattern'
+            'Invalid route pattern'
             );
         }
         $pattern = $pattern ? $pattern : '';
@@ -51,6 +51,7 @@ class Framework extends \PHPixie\Framework {
         $proc = $this->builder->configuration()
                 ->httpProcessor()->processor('act');
         $proc->{$id . 'Action'} = \Closure::bind($func, $proc);
+        return $this;
     }
 
     /**
@@ -80,14 +81,12 @@ class Framework extends \PHPixie\Framework {
      * @param array $config Configuration data in PHPixie format.
      */
     public function ormRelationship(array $config) {
-        try {
-            $this->sanitizeORM($config);
-        } catch (\PHPixie\ORM\Exception\Relationship $ex) {
-            $ex->getMessage();
-        }
-        $conf = $this->builder->configuration()->ormConfig()->get('relationships');
+        $this->sanitizeORM($config);
+        $conf = $this->builder->configuration()->ormConfig()
+            ->get('relationships');
         $conf[] = $config;
-        $this->builder->configuration()->ormConfig()->set('relationships', $conf);
+        $this->builder->configuration()->ormConfig()
+            ->set('relationships', $conf);
     }
 
     /**
@@ -95,18 +94,19 @@ class Framework extends \PHPixie\Framework {
      * @param string $type Type of a wrapper -- the only options are:
      *  'repository', 'entity', 'embeddedEntity' and 'query'
      * @param string $name Wrapper name
-     * @param function $func Function that must return an instance of 
-     * \PHPixie\ORM\Wrappers\Type\Database
+     * @param function $func Function that must have a single 
+     * parameter and return an instance of \PHPixie\ORM\Wrappers\Type
      */
     public function wrapORM($type, $name, $func) {
         if (in_array(
                 $type, array('repository', 'entity', 'embeddedEntity', 'query')
-            )
+            ) && is_callable($func)
         ) {
             $wrappers = $this->builder()->configuration()->ormWrappers();
             $wrappers->{'make' . ucfirst($type)}($name, $func);
+            return $this;
         } else {
-            throw new PHPixie\ORM\Exception\Builder('Invalid wrapper type');
+            throw new \PHPixie\ORM\Exception\Builder('Invalid wrapper type');
         }
     }
 
@@ -130,7 +130,7 @@ class Framework extends \PHPixie\Framework {
             return true;
         }
         throw new \PHPixie\ORM\Exception\Relationship(
-        'Invalid ORM relationships configuration'
+            'Invalid ORM relationships configuration'
         );
     }
 
