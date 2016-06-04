@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-namespace Project\ORMWrappers\User;
+namespace PHPixie\Micro\ORMWrappers\User;
 
 /**
  * Description of Repository

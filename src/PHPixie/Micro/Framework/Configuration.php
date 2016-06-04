@@ -1,6 +1,6 @@
 <?php
 
-namespace Project\Framework;
+namespace PHPixie\Micro\Framework;
 
 class Configuration implements \PHPixie\Framework\Configuration {
 
@@ -85,7 +85,7 @@ class Configuration implements \PHPixie\Framework\Configuration {
     }
 
     protected function buildOrmWrappers() {
-        return new \Project\ORMWrappers();
+        return new \PHPixie\Micro\ORMWrappers();
     }
 
     protected function buildHttpConfig() {
@@ -98,8 +98,12 @@ class Configuration implements \PHPixie\Framework\Configuration {
 
     protected function buildFilesystemRoot() {
         $filesystem = $this->builder->components()->filesystem();
-
-        $path = realpath(__DIR__ . '/../../../');
+        if (dirname(__DIR__.'/../../../../') == 'vendor') {
+            $path = realpath(__DIR__ . '/../../../../../../../');
+        }
+        else {
+            $path = realpath(__DIR__ . '/../../../');
+        }        
         return $filesystem->root($path);
     }
 
@@ -111,7 +115,7 @@ class Configuration implements \PHPixie\Framework\Configuration {
     }
 
     protected function buildHttpProcessor() {
-        return new \Project\HTTPProcessor($this->builder);
+        return new \PHPixie\Micro\HTTPProcessor($this->builder);
     }
 
     protected function buildHttpRouteResolver() {
@@ -154,7 +158,7 @@ class Configuration implements \PHPixie\Framework\Configuration {
                 ]
             ));
             return $components->filesystem()->buildlocator(
-                            $locatorConfig, $root1, new \Project\TemplateLocator($settings)
+                            $locatorConfig, $root1, new \PHPixie\Micro\TemplateLocator($settings)
             );
         } else {
             $config = $this->configStorage()->slice('template.locator');
@@ -181,7 +185,7 @@ class Configuration implements \PHPixie\Framework\Configuration {
     }
 
     protected function buildAuthRepositories() {
-        return new \Project\Framework\AuthRepositories($this->builder);
+        return new \PHPixie\Micro\Framework\AuthRepositories($this->builder);
     }
     
     protected function buildImageDefaultDriver() {

@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-namespace Project\ORMWrappers;
+namespace PHPixie\Micro\ORMWrappers;
 
 /**
  * Description of Project

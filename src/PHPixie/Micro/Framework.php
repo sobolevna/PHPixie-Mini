@@ -1,6 +1,6 @@
 <?php
 
-namespace Project;
+namespace PHPixie\Micro;
 
 class Framework extends \PHPixie\Framework {
 
@@ -8,7 +8,7 @@ class Framework extends \PHPixie\Framework {
 
     /**
      * 
-     * @return \Project\Framework\Builder
+     * @return \PHPixie\Micro\Framework\Builder
      */
     protected function buildBuilder() {
         return new Framework\Builder();
@@ -72,6 +72,7 @@ class Framework extends \PHPixie\Framework {
      * @param array $config Configuration data in PHPixie format.
      */
     public function ormModel($name, array $config) {
+        $this->sanitizeModel($name, $config);
         $this->builder->configuration()->ormConfig()
             ->slice('models')->set($name, $config);
     }
@@ -110,27 +111,32 @@ class Framework extends \PHPixie\Framework {
         }
     }
 
-    public function setAuthProviders($name, $config) {
+    public function setAuthProviders(array $config) {
+        if (!$config || $config == []) {
+            throw new \PHPixie\Auth\Exception('Invalid auth providers');
+        }
         $this->builder->configuration()->authConfig()
-            ->slice('domains.default.provider')->set($name, $config);
+            ->slice('domains.default')->set('providers', $config);
     }
 
     protected function sanitizeORM(array $config) {
-        if (($config['type'] == 'oneToMany' || $config['type'] == 'oneToOne' || $config['type'] == 'embedsMany') && array_key_exists('owner', $config) && array_key_exists('items', $config)
-        ) {
-            return true;
-        } elseif ($config['type'] == 'manyToMany' && \array_key_exists('left', $config) && \array_key_exists('right', $config)
-        ) {
-            return true;
-        } elseif ($config['type'] == 'embedsOne' && array_key_exists('owner', $config) && \array_key_exists('item', $config)
-        ) {
-            return true;
-        } elseif ($config['type'] == 'nestedSet' && \array_key_exists('model', $config)
-        ) {
-            return true;
+        if (array_key_exists('type', $config)) {
+            if (($config['type'] == 'oneToMany' || $config['type'] == 'oneToOne' || $config['type'] == 'embedsMany') && array_key_exists('owner', $config) && array_key_exists('items', $config)
+            ) {
+                return true;
+            } elseif ($config['type'] == 'manyToMany' && \array_key_exists('left', $config) && \array_key_exists('right', $config)
+            ) {
+                return true;
+            } elseif ($config['type'] == 'embedsOne' && array_key_exists('owner', $config) && \array_key_exists('item', $config)
+            ) {
+                return true;
+            } elseif ($config['type'] == 'nestedSet' && \array_key_exists('model', $config)
+            ) {
+                return true;
+            }
         }
         throw new \PHPixie\ORM\Exception\Relationship(
-            'Invalid ORM relationships configuration'
+        'Invalid ORM relationships configuration'
         );
     }
 
@@ -145,6 +151,22 @@ class Framework extends \PHPixie\Framework {
         throw new \PHPixie\Database\Exception\Builder(
         'Invalid database configuration'
         );
+    }
+
+    protected function sanitizeModel($name, $config) {
+        if (!is_scalar($name)) {
+            throw new \PHPixie\ORM\Exception\Model(
+            'Invalid model name'
+            );
+        }
+        $keys = ['type', 'connection', 'idField'];
+        foreach ($keys as $key) {
+            if (!array_key_exists($key, $config)) {
+                throw new \PHPixie\ORM\Exception\Model(
+                'Invalid model config'
+                );
+            }
+        }
     }
 
 }

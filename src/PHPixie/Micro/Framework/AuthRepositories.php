@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-namespace Project\Framework;
+namespace PHPixie\Micro\Framework;
 
 /**
  * Description of AuthRepositories
@@ -14,6 +14,11 @@ namespace Project\Framework;
  * @author sobolevna
  */
 class AuthRepositories extends \PHPixie\Auth\Repositories\Registry\Builder {
+    
+    /**
+     *
+     * @var Builder
+     */
     protected $builder;
 
     public function __construct($builder)

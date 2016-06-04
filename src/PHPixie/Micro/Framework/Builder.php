@@ -1,6 +1,6 @@
 <?php
 
-namespace Project\Framework;
+namespace PHPixie\Micro\Framework;
 
 class Builder extends \PHPixie\Framework\Builder {
 
@@ -14,10 +14,6 @@ class Builder extends \PHPixie\Framework\Builder {
 
     protected function getRootDirectory() {
         return realpath(__DIR__ . '/../../../');
-    }
-
-    protected function buildAuthRepositories() {
-        return new AuthRepositories($this);
     }
 
 }

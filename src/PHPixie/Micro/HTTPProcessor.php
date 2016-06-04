@@ -1,6 +1,6 @@
 <?php
 
-namespace Project;
+namespace PHPixie\Micro;
 
 class HTTPProcessor extends \PHPixie\HTTPProcessors\Processor\Dispatcher\Builder\Attribute {
 
@@ -9,14 +9,6 @@ class HTTPProcessor extends \PHPixie\HTTPProcessors\Processor\Dispatcher\Builder
 
     public function __construct($builder) {
         $this->builder = $builder;
-    }
-
-    protected function buildGreetProcessor() {
-        $components = $this->builder->components();
-
-        return new HTTPProcessors\Greet(
-                $components->template()
-        );
     }
 
     protected function buildActProcessor() {

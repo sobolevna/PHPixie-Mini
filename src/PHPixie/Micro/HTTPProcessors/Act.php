@@ -24,7 +24,7 @@
  * @author sobolev
  */
 
-namespace Project\HTTPProcessors;
+namespace PHPixie\Micro\HTTPProcessors;
 
 class Act extends \PHPixie\HTTPProcessors\Processor\Actions\Attribute {
 

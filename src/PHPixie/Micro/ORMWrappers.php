@@ -1,6 +1,6 @@
 <?php
 
-namespace Project;
+namespace PHPixie\Micro;
 
 class ORMWrappers extends \PHPixie\ORM\Wrappers\Implementation {
 
@@ -16,15 +16,7 @@ class ORMWrappers extends \PHPixie\ORM\Wrappers\Implementation {
             $this->$name = $data;
         }
     }
-    
-    public function __get($name) {
-        if (property_exists($this, $name)) {
-            return $this->$name;
-        } elseif (array_key_exists($name, $array)) {
-            return $this->functions[$name];
-        }
-    }
-    
+        
     public function __call($method, $args) {
         if (isset($this->functions[$method])) {
 

@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-namespace Project;
+namespace PHPixie\Micro;
 
 /**
  * Description of TemplateLocator
