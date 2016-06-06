@@ -18,8 +18,8 @@ class AuthRepositoriesTest extends \PHPixie\Test\Testcase {
     protected $stack;
 
     public function setUp() {
-        $builder = new \Project\Framework\Builder();
-        $this->stack = new \Project\Framework\AuthRepositories($builder);
+        $builder = new \PHPixie\Micro\Framework\Builder();
+        $this->stack = new \PHPixie\Micro\Framework\AuthRepositories($builder);
     }
     
     /**
@@ -27,6 +27,6 @@ class AuthRepositoriesTest extends \PHPixie\Test\Testcase {
      * @covers <protected>
      */
     public function testUserRepository() {
-        $this->assertInstance($this->stack->repository('user'), '\Project\ORMWrappers\User\Repository');
+        $this->assertInstance($this->stack->repository('user'), '\PHPixie\Micro\ORMWrappers\User\Repository');
     }
 }
