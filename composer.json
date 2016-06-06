@@ -1,17 +1,26 @@
 {
-	"name": "phpixie/project",
-	"type": "project",
-	"description" : "PHPixie skeleton project",
+	"name": "phpixie/micro-framework",
+	"type": "library",
+	"description" : "Bundle for micromizing PHPixie",
+    "keywords": ["framework"],
 	"license" : "BSD",
+    "authors": [
+        {
+            "name": "Roman Tsiupa",
+            "email": "draconyster@gmail.com",
+            "homepage": "http://dracony.org"
+        },
+        {
+            "name": "sobolevna",
+            "email": "sobolevna@gmail.com"
+        }
+    ],
     "autoload": {
         "psr-4": {
-            "": [
-                "src/",
-                "tests/",
-                
-                "bundles/app/src/",
-                "bundles/app/tests/"
-            ]
+            "psr-4": {
+                "PHPixie\\": "src/PHPixie",
+                "PHPixie\\Tests\\": "tests/PHPixie/Tests"
+            }
         }
     },
     "require": {

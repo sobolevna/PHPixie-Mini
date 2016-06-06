@@ -1,14 +1,8 @@
 <?php
 
-namespace Project\Framework;
+namespace PHPixie\Micro\Framework;
 
 class Builder extends \PHPixie\Framework\Builder {
-    
-    public $root;
-    
-    public function __construct($root=null) {
-        $this->root = $root;
-    }
 
     public function configuration() {
         return $this->instance('configuration');
