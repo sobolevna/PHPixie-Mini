@@ -6,7 +6,7 @@ class Builder extends \PHPixie\Framework\Builder {
     
     public $root;
     
-    public function __construct($root) {
+    public function __construct($root=null) {
         $this->root = $root;
     }
 
