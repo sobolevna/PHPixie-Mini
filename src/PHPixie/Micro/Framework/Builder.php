@@ -12,8 +12,4 @@ class Builder extends \PHPixie\Framework\Builder {
         return new Configuration($this);
     }
 
-    protected function getRootDirectory() {
-        return realpath(__DIR__ . '/../../../');
-    }
-
 }

@@ -4,15 +4,27 @@ namespace PHPixie\Tests;
 
 /**
  * Description of FrameworkTest
- *
+ * @coversDefaultClass \PHPixie\Micro\Framework
  * @author sobolevna
  */
 class FrameworkTest extends \PHPixie\Test\Testcase {
 
+    /**
+     *
+     * @var \PHPixie\Micro\Framework
+     */
     protected $framework;
 
     public function setUp() {
-        $this->framework = new \Project\Framework();
+        $this->framework = new \PHPixie\Micro\Framework();
+    }
+    
+    /**
+     * @covers ::__construct
+     * @covers ::<protected>
+     */
+    public function testConsctructor() {
+        $this->assertInstance($this->framework->builder(), '\PHPixie\Micro\Framework\Builder');
     }
 
     /**
@@ -31,10 +43,10 @@ class FrameworkTest extends \PHPixie\Test\Testcase {
         } else {
             $config = $this->framework->builder()->configuration()
                     ->httpConfig()->slice('resolver.resolvers')->getData();
-            $processorMock = $this->quickMock('\Project\HTTPPRocessors\Act');
+            $processorMock = $this->quickMock('\PHPixie\Micro\HTTPPRocessors\Act');
             $proc = $this->framework->builder()->configuration()->httpProcessor()
                 ->processor('act');
-            $this->assertInstance($proc, '\Project\HTTPPRocessors\Act');
+            $this->assertInstance($proc, '\PHPixie\Micro\HTTPPRocessors\Act');
             $this->framework->route($pattern, $func);
             $configId = 'r' . (count($config));
             $config[$configId] = [
@@ -91,7 +103,7 @@ class FrameworkTest extends \PHPixie\Test\Testcase {
                     return true;
                 }),
             ['query', 'rgfsrav', function($entity) {
-                    return new \Project\ORMWrappers\Project($entity);
+                    return new \PHPixie\Micro\ORMWrappers\Project($entity);
                 }],
             ['repository', 'null', null],
             ['12', 'rgfsrav', null]
@@ -287,5 +299,5 @@ class FrameworkTest extends \PHPixie\Test\Testcase {
             [[1]]
         );
     }
-
+    
 }

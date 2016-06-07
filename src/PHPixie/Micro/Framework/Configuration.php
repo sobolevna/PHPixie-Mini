@@ -62,7 +62,7 @@ class Configuration implements \PHPixie\Framework\Configuration {
     public function templateLocator() {
         return $this->instance('templateLocator');
     }
-    
+
     public function socialConfig() {
         return $this->instance('socialConfig');
     }
@@ -98,12 +98,14 @@ class Configuration implements \PHPixie\Framework\Configuration {
 
     protected function buildFilesystemRoot() {
         $filesystem = $this->builder->components()->filesystem();
-        if (dirname(__DIR__.'/../../../../') == 'vendor') {
+        if (file_exists(__DIR__ . '/../../../../vendor') && dirname(__DIR__ . '/../../../../../') != 'vendor'
+        ) {
+            $path = realpath(__DIR__ . '/../../../../');
+        } elseif (dirname(__DIR__ . '/../../../../../') == 'vendor') {
             $path = realpath(__DIR__ . '/../../../../../../../');
+        } else {
+            throw new \Exception('Invalid filesystem root');
         }
-        else {
-            $path = realpath(__DIR__ . '/../../../');
-        }        
         return $filesystem->root($path);
     }
 
@@ -122,7 +124,7 @@ class Configuration implements \PHPixie\Framework\Configuration {
         $components = $this->builder->components();
 
         return $components->route()->buildResolver(
-                        $this->configStorage()->slice('http.resolver')
+                $this->configStorage()->slice('http.resolver')
         );
     }
 
@@ -134,7 +136,7 @@ class Configuration implements \PHPixie\Framework\Configuration {
             $config1 = $this->configStorage()->slice('template.locator');
             $root1 = $this->filesystemRoot();
             $locator1 = $components->filesystem()->buildLocator(
-                    $config1, $root1
+                $config1, $root1
             );
 
             $config2 = $components->slice()->arrayData(array(
@@ -142,11 +144,9 @@ class Configuration implements \PHPixie\Framework\Configuration {
                 'directory' => 'template'
             ));
             $root2 = $components->filesystem()->root($userTpl);
-//            var_dump($config2);
             $locator2 = $components->filesystem()->buildLocator(
-                    $config2, $root2
+                $config2, $root2
             );
-//            var_dump($locator2);
             $settings = ['loc1' => $locator1, 'loc2' => $locator2];
             $locatorConfig = $components->slice()->arrayData(array(
                 'type' => 'group',
@@ -158,12 +158,12 @@ class Configuration implements \PHPixie\Framework\Configuration {
                 ]
             ));
             return $components->filesystem()->buildlocator(
-                            $locatorConfig, $root1, new \PHPixie\Micro\TemplateLocator($settings)
+                    $locatorConfig, $root1, new \PHPixie\Micro\TemplateLocator($settings)
             );
         } else {
             $config = $this->configStorage()->slice('template.locator');
             return $components->filesystem()->buildLocator(
-                            $config, $this->filesystemRoot()
+                    $config, $this->filesystemRoot()
             );
         }
     }
@@ -176,7 +176,7 @@ class Configuration implements \PHPixie\Framework\Configuration {
         $config = $this->builder->components()->config();
 
         return $config->directory(
-                        $this->assetsRoot()->path(), 'config'
+                $this->assetsRoot()->path(), 'config'
         );
     }
 
@@ -187,12 +187,13 @@ class Configuration implements \PHPixie\Framework\Configuration {
     protected function buildAuthRepositories() {
         return new \PHPixie\Micro\Framework\AuthRepositories($this->builder);
     }
-    
+
     protected function buildImageDefaultDriver() {
         return $this->configStorage()->get('image.defaultDriver', 'gd');
     }
-    
+
     protected function buildSocialConfig() {
         return $this->configStorage()->get('social');
     }
+
 }
