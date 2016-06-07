@@ -221,7 +221,7 @@ class Framework extends \PHPixie\Framework {
     }
 
     protected function handleRunFlag() {
-        $root = filter_input(INPUT_SERVER, 'DOCUMENT_ROOT');
+        $root = realpath(dirname(filter_input(INPUT_SERVER, 'SCRIPT_FILENAME')));
         $access = file_exists($root . '/.htaccess');
         $tpl = file_exists($root . '/template');
         $error = '

@@ -130,7 +130,7 @@ class Configuration implements \PHPixie\Framework\Configuration {
 
     protected function buildTemplateLocator() {
         $components = $this->builder->components();
-        $userTpl = realpath($_SERVER['DOCUMENT_ROOT']);
+        $userTpl = realpath(dirname(filter_input(INPUT_SERVER, 'SCRIPT_FILENAME')));
         if (is_dir($userTpl . '/template')) {
 
             $config1 = $this->configStorage()->slice('template.locator');
