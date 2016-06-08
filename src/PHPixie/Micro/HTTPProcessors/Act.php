@@ -38,8 +38,9 @@ class Act extends \PHPixie\HTTPProcessors\Processor\Actions\Attribute {
     public function __set($name, $data) {
         if (is_callable($data)) {
             $this->functions[$name] = $data;
-        } else
+        } else {
             $this->$name = $data;
+        }
     }
 
     public function __call($method, $args) {
@@ -51,12 +52,12 @@ class Act extends \PHPixie\HTTPProcessors\Processor\Actions\Attribute {
 
     public function isProcessable($request) {
         $action = $request->attributes()->get('action');
-        return isset($this->functions[$action.'Action']);
+        return isset($this->functions[$action . 'Action']);
     }
 
     public function process($request) {
         $action = $request->attributes()->get('action');
-        return $this->functions[$action.'Action']($request);
+        return $this->functions[$action . 'Action']($request);
     }
 
     public function defaultAction($request) {
@@ -64,7 +65,7 @@ class Act extends \PHPixie\HTTPProcessors\Processor\Actions\Attribute {
         $container->message = "Have fun coding!";
         return $container;
     }
-    
+
     protected function domain() {
         $auth = $this->builder->components()->auth();
         return $auth->domain();

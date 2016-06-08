@@ -80,6 +80,7 @@ class Framework extends \PHPixie\Framework {
     public function confugureDB($name, array $config) {
         $this->sanitizeDB($config);
         $this->builder->configuration()->databaseConfig()->set($name, $config);
+        return $this;
     }
 
     /**
@@ -110,6 +111,7 @@ class Framework extends \PHPixie\Framework {
         $this->sanitizeModel($name, $config);
         $this->builder->configuration()->ormConfig()
             ->slice('models')->set($name, $config);
+        return $this;
     }
 
     /**
@@ -145,6 +147,7 @@ class Framework extends \PHPixie\Framework {
         $conf[] = $config;
         $this->builder->configuration()->ormConfig()
             ->set('relationships', $conf);
+        return $this;
     }
 
     /**
@@ -193,6 +196,7 @@ class Framework extends \PHPixie\Framework {
         } else {
             throw new \PHPixie\ORM\Exception\Builder('Invalid wrapper type');
         }
+        return $this;
     }
 
     /**
@@ -206,6 +210,7 @@ class Framework extends \PHPixie\Framework {
         }
         $this->builder->configuration()->authConfig()
             ->slice('domains.default')->set('providers', $config);
+        return $this;
     }
 
     /**

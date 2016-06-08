@@ -4,69 +4,142 @@ namespace PHPixie\Micro\Framework;
 
 class Configuration implements \PHPixie\Framework\Configuration {
 
+    /**
+     *
+     * @var Builder 
+     */
     protected $builder;
+    /**
+     *
+     * @var array
+     */
     protected $instances = array();
 
+    /**
+     * 
+     * @param Builder $builder
+     */
     public function __construct($builder) {
         $this->builder = $builder;
     }
 
+    /**
+     * 
+     * @return \PHPixie\Slice\Type\Slice\Editable
+     */
     public function authConfig() {
         return $this->instance('authConfig');
     }
 
+    /**
+     * 
+     * @return \PHPixie\Micro\Framework\AuthRepositories
+     */
     public function authRepositories() {
-        $this->instance('authRepositories');
+        return $this->instance('authRepositories');
     }
 
+    /**
+     * 
+     * @return \PHPixie\Slice\Type\Slice\Editable
+     */
     public function imageDefaultDriver() {
-        $this->instance('imageDefaultDriver');
+        return $this->instance('imageDefaultDriver');
     }
 
+    /**
+     * 
+     * @return \PHPixie\Slice\Type\Slice\Editable
+     */
     public function databaseConfig() {
         return $this->instance('databaseConfig');
     }
 
+    /**
+     * 
+     * @return \PHPixie\Slice\Type\Slice\Editable
+     */
     public function httpConfig() {
         return $this->instance('httpConfig');
     }
 
+    /**
+     * 
+     * @return \PHPixie\Slice\Type\Slice\Editable
+     */
     public function templateConfig() {
         return $this->instance('templateConfig');
     }
 
-    public function filesystemRoot() {
-        return $this->instance('filesystemRoot');
-    }
-
-    public function assetsRoot() {
-        return $this->instance('assetsRoot');
-    }
-
+    /**
+     * 
+     * @return \PHPixie\Slice\Type\Slice\Editable
+     */
     public function ormConfig() {
         return $this->instance('ormConfig');
     }
 
+    /**
+     * 
+     * @return \PHPixie\Micro\ORMWrappers
+     */
     public function ormWrappers() {
         return $this->instance('ormWrappers');
     }
 
+    /**
+     * 
+     * @return \PHPixie\Micro\HTTPProcessor
+     */
     public function httpProcessor() {
         return $this->instance('httpProcessor');
     }
 
+    /**
+     * 
+     * @return \PHPixie\Slice\Type\Slice\Editable
+     */
     public function httpRouteResolver() {
         return $this->instance('httpRouteResolver');
     }
 
+    /**
+     * 
+     * @return \PHPixie\Slice\Type\Slice\Editable
+     */
     public function templateLocator() {
         return $this->instance('templateLocator');
     }
 
+    /**
+     * 
+     * @return \PHPixie\Slice\Type\Slice\Editable
+     */
     public function socialConfig() {
         return $this->instance('socialConfig');
     }
+    
+    /**
+     * 
+     * @return \PHPixie\Config\Storages\Type\Directory
+     */
+    public function configStorage() {
+        return $this->builder->assets()->configStorage();
+    }
+    
+    /**
+     * 
+     * @return \PHPixie\Filesystem\Root
+     */
+    public function filesystemRoot() {
+        return $this->builder->assets()->root();
+    }
 
+    /**
+     * 
+     * @param string $name
+     * @return mixed
+     */
     protected function instance($name) {
         if (!array_key_exists($name, $this->instances)) {
             $method = 'build' . ucfirst($name);
@@ -76,50 +149,57 @@ class Configuration implements \PHPixie\Framework\Configuration {
         return $this->instances[$name];
     }
 
+    /**
+     * 
+     * @return \PHPixie\Slice\Type\Slice\Editable
+     */
     protected function buildDatabaseConfig() {
         return $this->configStorage()->slice('database');
     }
 
+    /**
+     * 
+     * @return \PHPixie\Slice\Type\Slice\Editable
+     */
     protected function buildOrmConfig() {
         return $this->configStorage()->slice('orm');
     }
 
+    /**
+     * 
+     * @return \PHPixie\Micro\ORMWrappers
+     */
     protected function buildOrmWrappers() {
         return new \PHPixie\Micro\ORMWrappers();
     }
 
+    /**
+     * 
+     * @return \PHPixie\Slice\Type\Slice\Editable
+     */
     protected function buildHttpConfig() {
         return $this->configStorage()->slice('http');
     }
 
+    /**
+     * 
+     * @return \PHPixie\Slice\Type\Slice\Editable
+     */
     protected function buildTemplateConfig() {
         return $this->configStorage()->slice('template');
     }
 
-    protected function buildFilesystemRoot() {
-        $filesystem = $this->builder->components()->filesystem();
-        if (file_exists(__DIR__ . '/../../../../vendor') && dirname(__DIR__ . '/../../../../../') != 'vendor'
-        ) {
-            $path = realpath(__DIR__ . '/../../../../');
-        } elseif (dirname(__DIR__ . '/../../../../../') == 'vendor') {
-            $path = realpath(__DIR__ . '/../../../../../../../');
-        } else {
-            throw new \Exception('Invalid filesystem root');
-        }
-        return $filesystem->root($path);
-    }
-
-    protected function buildAssetsRoot() {
-        $filesystem = $this->builder->components()->filesystem();
-
-        $path = $this->filesystemRoot()->path('/assets');
-        return $filesystem->root($path);
-    }
-
+    /**
+     * 
+     * @return \PHPixie\Micro\HTTPProcessor
+     */
     protected function buildHttpProcessor() {
         return new \PHPixie\Micro\HTTPProcessor($this->builder);
     }
 
+    /**
+     * @return \PHPixie\Route\Resolvers\Resolver
+     */
     protected function buildHttpRouteResolver() {
         $components = $this->builder->components();
 
@@ -128,13 +208,17 @@ class Configuration implements \PHPixie\Framework\Configuration {
         );
     }
 
+    /**
+     * 
+     * @return \PHPixie\Filesystem\Locators\Locator\Directory|\PHPixie\Filesystem\Locators\Locator\Mount
+     */
     protected function buildTemplateLocator() {
         $components = $this->builder->components();
         $userTpl = realpath(dirname(filter_input(INPUT_SERVER, 'SCRIPT_FILENAME')));
         if (is_dir($userTpl . '/template')) {
 
             $config1 = $this->configStorage()->slice('template.locator');
-            $root1 = $this->filesystemRoot();
+            $root1 = $this->bulder->assets()->root();
             $locator1 = $components->filesystem()->buildLocator(
                 $config1, $root1
             );
@@ -163,37 +247,41 @@ class Configuration implements \PHPixie\Framework\Configuration {
         } else {
             $config = $this->configStorage()->slice('template.locator');
             return $components->filesystem()->buildLocator(
-                    $config, $this->filesystemRoot()
+                    $config, $root1
             );
         }
     }
 
-    public function configStorage() {
-        return $this->instance('configStorage');
-    }
-
-    protected function buildConfigStorage() {
-        $config = $this->builder->components()->config();
-
-        return $config->directory(
-                $this->assetsRoot()->path(), 'config'
-        );
-    }
-
+/**
+     * 
+     * @return \PHPixie\Slice\Type\Slice\Editable
+     */
     protected function buildAuthConfig() {
         return $this->configStorage()->slice('auth');
     }
 
+    /**
+     * 
+     * @return \PHPixie\Micro\Framework\AuthRepositories
+     */
     protected function buildAuthRepositories() {
         return new \PHPixie\Micro\Framework\AuthRepositories($this->builder);
     }
 
+    /**
+     * 
+     * @return \PHPixie\Slice\Type\Slice\Editable
+     */
     protected function buildImageDefaultDriver() {
-        return $this->configStorage()->get('image.defaultDriver', 'gd');
+        return $this->configStorage()->slice('image.defaultDriver', 'gd');
     }
 
+    /**
+     * 
+     * @return \PHPixie\Slice\Type\Slice\Editable
+     */
     protected function buildSocialConfig() {
-        return $this->configStorage()->get('social');
+        return $this->configStorage()->slice('social');
     }
 
 }
