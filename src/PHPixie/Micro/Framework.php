@@ -224,45 +224,34 @@ class Framework extends \PHPixie\Framework {
         $root = realpath(dirname(filter_input(INPUT_SERVER, 'SCRIPT_FILENAME')));
         $access = file_exists($root . '/.htaccess');
         $tpl = file_exists($root . '/template');
-        $error = '
-<h2>Error in changing filesystem</h2>
-<p>It seems like your server settings prevent PHPixie to change your filesystem.</p>
-<p>Change your server settings or just write "$app->run(0);" in your index file</p>
-        ';
         if (!$access) {
-            echo "
-<h2>Oops!</h2>
-<p>It seems like you don't have .htaccess file in your document root.</p>
-<p>Just refresh the page and we shall make it for you</p>
-            ";
-            try {
-                $file = fopen($root . '/.htaccess', 'w');
-                $text = <<<TEXT
+            echo $this->errorReport('.htaccess file');
+            $file = fopen($root . '/.htaccess', 'w');
+            $base = filter_input(INPUT_SERVER, 'PHP_SELF');
+            $text = <<<TEXT
 RewriteEngine On
-RewriteBase /
+RewriteBase $base
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule .* index.php [PT,L,QSA]
 TEXT;
-                fwrite($file, $text);
-                fclose($file);
-            } catch (\Exception $exc) {
-                echo $error;
-                echo $exc->getTraceAsString();
-            }
+            fwrite($file, $text);
+            fclose($file);
         }
         if (!$tpl) {
-            echo "
-<h2>Oops!</h2>
-<p>It seems like you don't have template directory in your document root.</p>
-<p>Just refresh the page and we shall make it for you</p>
-            ";
-            try {
-                mkdir($root . '/template');
-            } catch (\Exception $exc) {
-                echo $error;
-                echo $exc->getTraceAsString();
-            }
+            echo $this->errorReport('template directory');
+
+            mkdir($root . '/template');
         }
+    }
+
+    protected function errorReport($param) {
+        return "
+<h2>Oops!</h2>
+<p>It seems like you don't have $param in your document root.</p>
+<p>Just refresh the page and we shall make it for you.</p>
+<p>If you see an error then your server settings prevent PHPixie to change your filesystem.</p>
+<p>Change your server settings or just write \"\$app->run(0);\" in your index file to shut this function down</p>
+            ";
     }
 
 }
