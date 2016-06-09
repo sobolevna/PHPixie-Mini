@@ -218,7 +218,7 @@ class Configuration implements \PHPixie\Framework\Configuration {
         if (is_dir($userTpl . '/template')) {
 
             $config1 = $this->configStorage()->slice('template.locator');
-            $root1 = $this->bulder->assets()->root();
+            $root1 = $this->filesystemRoot();
             $locator1 = $components->filesystem()->buildLocator(
                 $config1, $root1
             );
@@ -247,7 +247,7 @@ class Configuration implements \PHPixie\Framework\Configuration {
         } else {
             $config = $this->configStorage()->slice('template.locator');
             return $components->filesystem()->buildLocator(
-                    $config, $root1
+                    $config, $this->filesystemRoot()
             );
         }
     }

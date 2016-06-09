@@ -34,7 +34,6 @@ class AssetsTest extends \PHPixie\Test\Testcase{
     
     /**
      * @covers ::__construct
-     * @depends BuilderTest::testAssets
      */
     public function testConstructor() {
         $this->assertInstance($this->assets, '\PHPixie\Micro\Framework\Assets');        

@@ -74,11 +74,19 @@ class ConfigurationTest extends \PHPixie\Test\Testcase {
      */
     public function testConfigs() {
         $array = [
-            'databaseConfig', 'ormConfig', 'authconfig', 'httpConfig', 'templateConfig', 'socialConfig', 'httpRouteResolver'
+            'databaseConfig', 'ormConfig', 'authConfig', 'httpConfig', 
+            'templateConfig', 'socialConfig'
         ];
         foreach ($array as $method) {
-            $this->assertInstance($this->configuration->{$method}(), '\PHPixie\Slice\Type\Slice\Editable');
+            $this->assertInstance(
+                $this->configuration->{$method}(), 
+                '\PHPixie\Slice\Type\Slice\Editable'
+            );
         }
+        $this->assertInstance(
+            $this->configuration->httpRouteResolver(), 
+            '\PHPixie\Route\Resolvers\Resolver\Group'
+        );
     }
 
     /**
@@ -146,7 +154,7 @@ class ConfigurationTest extends \PHPixie\Test\Testcase {
         } else {
             $this->assertInstance(
                 $this->configuration->templateLocator(), 
-                '\PHPixie\Filesystem\Locators\Locator\Directory'
+                '\PHPixie\Filesystem\Locators\Locator\Group'
             );
         }
     }

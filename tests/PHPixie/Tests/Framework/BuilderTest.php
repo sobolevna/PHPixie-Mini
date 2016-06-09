@@ -45,7 +45,6 @@ class BuilderTest extends \PHPixie\Test\Testcase {
     /**
      * @covers ::assets
      * @covers <protected>
-     * @expectedException \Exception
      */
     public function testAssets() {
         $this->assertInstance($this->builder->assets(), 
