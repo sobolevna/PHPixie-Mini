@@ -45,7 +45,7 @@ class HTTPProcessorsTest extends \PHPixie\Test\Testcase {
      */
     public function testActBuilder() {
         $this->assertInstance(
-            $this->processor->process('act'), 
+            $this->processor->processor('act'), 
             'PHPixie\Micro\HTTPProcessors\Act'            
         );
     }

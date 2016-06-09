@@ -77,7 +77,7 @@ class ConfigurationTest extends \PHPixie\Test\Testcase {
             'databaseConfig', 'ormConfig', 'authconfig', 'httpConfig', 'templateConfig', 'socialConfig', 'httpRouteResolver'
         ];
         foreach ($array as $method) {
-            $this->assertInstance($this->{$method}(), '\PHPixie\Slice\Type\Slice\Editable');
+            $this->assertInstance($this->configuration->{$method}(), '\PHPixie\Slice\Type\Slice\Editable');
         }
     }
 

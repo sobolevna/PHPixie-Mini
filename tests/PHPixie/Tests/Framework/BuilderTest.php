@@ -37,7 +37,7 @@ class BuilderTest extends \PHPixie\Test\Testcase {
      * @covers <protected>
      */
     public function testConfiguration() {
-        $this->assertInstance($this->builder->configuation(), 
+        $this->assertInstance($this->builder->configuration(), 
             '\PHPixie\Micro\Framework\Configuration'
         );
     }
