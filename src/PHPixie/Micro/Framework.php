@@ -186,13 +186,13 @@ class Framework extends \PHPixie\Framework {
      * parameter and return an instance of \PHPixie\ORM\Wrappers\Type
      */
     public function wrapORM($type, $name, $func) {
+        $types = array('repository', 'entity', 'embeddedEntity', 'query');
         if (in_array(
-                $type, array('repository', 'entity', 'embeddedEntity', 'query')
+                $type, $types
             ) && is_callable($func)
         ) {
             $wrappers = $this->builder()->configuration()->ormWrappers();
             $wrappers->{'make' . ucfirst($type)}($name, $func);
-            return $this;
         } else {
             throw new \PHPixie\ORM\Exception\Builder('Invalid wrapper type');
         }

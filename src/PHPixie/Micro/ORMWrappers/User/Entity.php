@@ -16,6 +16,7 @@ namespace PHPixie\Micro\ORMWrappers\User;
 // Entity wrapper
 class Entity extends \PHPixie\AuthORM\Repositories\Type\Login\User {
 
+    public $passwordHash;
     // get hashed password value
     // from the field in the database
     public function passwordHash() {

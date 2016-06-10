@@ -9,7 +9,7 @@ namespace PHPixie\Tests;
 
 /**
  * Description of HTTPProcessors
- * @coversDefaultClass PHPixie\Micro\HTTPProcessors
+ * @coversDefaultClass PHPixie\Micro\HTTPProcessor
  * @author sobolevna
  */
 class HTTPProcessorsTest extends \PHPixie\Test\Testcase {

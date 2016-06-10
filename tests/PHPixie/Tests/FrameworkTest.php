@@ -43,10 +43,10 @@ class FrameworkTest extends \PHPixie\Test\Testcase {
         } else {
             $config = $this->framework->builder()->configuration()
                     ->httpConfig()->slice('resolver.resolvers')->getData();
-            $processorMock = $this->quickMock('\PHPixie\Micro\HTTPPRocessors\Act');
+            $processorMock = $this->quickMock('\PHPixie\Micro\HTTPProcessors\Act');
             $proc = $this->framework->builder()->configuration()->httpProcessor()
                 ->processor('act');
-            $this->assertInstance($proc, '\PHPixie\Micro\HTTPPRocessors\Act');
+            $this->assertInstance($proc, '\PHPixie\Micro\HTTPProcessors\Act');
             $this->framework->route($pattern, $func);
             $configId = 'r' . (count($config));
             $config[$configId] = [
@@ -62,7 +62,7 @@ class FrameworkTest extends \PHPixie\Test\Testcase {
             $this->assertEquals($configNew, $config);
             $processorMock->{$configId . 'Action'} = \Closure::bind($func, $processorMock);
             $this->assertEquals(
-                $this->returnValue($proc->{$configId . 'Action'}), $this->returnValue($processorMock->{$configId . 'Action'})
+                $this->returnValue($proc->{$configId . 'Action'}(null)), $this->returnValue($func(null))
             );
         }
     }
