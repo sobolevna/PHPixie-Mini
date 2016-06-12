@@ -10,11 +10,15 @@ namespace PHPixie\Tests\Framework;
 
 /**
  * Description of AuthRepositoriesTest
- *
+ * @coversDefaultClass \PHPixie\Micro\Framework\AuthRepositories
  * @author sobolevna
  */
 class AuthRepositoriesTest extends \PHPixie\Test\Testcase {
     
+    /**
+     *
+     * @var \PHPixie\Micro\Framework\AuthRepositories
+     */
     protected $stack;
 
     public function setUp() {
@@ -24,7 +28,7 @@ class AuthRepositoriesTest extends \PHPixie\Test\Testcase {
     
     /**
      * @covers ::repository
-     * @covers <protected>
+     * @covers ::<protected>
      */
     public function testUserRepository() {
         $this->assertInstance($this->stack->repository('user'), '\PHPixie\Micro\ORMWrappers\User\Repository');

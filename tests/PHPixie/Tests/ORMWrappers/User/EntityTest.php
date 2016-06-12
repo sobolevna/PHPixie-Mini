@@ -8,7 +8,7 @@
 namespace PHPixie\Tests\ORMWrappers\User;
 /**
  * Description of EntityTest
- * @coversDefaultClass \PHPixie\ORMWrappers\User\Entity
+ * @coversDefaultClass \PHPixie\Micro\ORMWrappers\User\Entity
  * @author sobolevna
  */
 class EntityTest extends \PHPixie\Test\Testcase {

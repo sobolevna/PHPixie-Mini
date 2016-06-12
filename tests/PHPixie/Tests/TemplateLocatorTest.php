@@ -10,7 +10,7 @@ namespace PHPixie\Tests;
 
 /**
  * Description of TemplateLocatorTest
- * @coversDefaltClass \PHPixie\Micro\TemplateLocator
+ * @coversDefaultClass \PHPixie\Micro\TemplateLocator
  * @author sobolevna
  */
 class TemplateLocatorTest extends \PHPixie\Test\Testcase{

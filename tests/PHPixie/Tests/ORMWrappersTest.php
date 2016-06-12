@@ -10,7 +10,7 @@ namespace PHPixie\Tests;
 
 /**
  * Description of ORMWrappers
- *
+ * @coversDefaultClass \PHPixie\Micro\ORMWrappers
  * @author sobolevna
  */
 class ORMWrappersTest extends \PHPixie\Test\Testcase {
@@ -30,7 +30,7 @@ class ORMWrappersTest extends \PHPixie\Test\Testcase {
      * @param string $name
      * @param \Closure $func
      * @covers ::makeRepository
-     * @covers <protected>
+     * @covers ::<protected>
      * @dataProvider providerRepository
      */
     public function testMakeRepository($name, $func) {
@@ -54,7 +54,7 @@ class ORMWrappersTest extends \PHPixie\Test\Testcase {
      * @param string $name
      * @param \Closure $func
      * @covers ::makeEntity
-     * @covers <protected>
+     * @covers ::<protected>
      * @dataProvider providerEntity
      */
     public function testMakeEntity($name, $func) {
@@ -78,7 +78,7 @@ class ORMWrappersTest extends \PHPixie\Test\Testcase {
      * @param string $name
      * @param \Closure $func
      * @covers ::makeQuery
-     * @covers <protected>
+     * @covers ::<protected>
      * @dataProvider providerQuery
      */
     public function testMakeQuery($name, $func) {
@@ -102,7 +102,7 @@ class ORMWrappersTest extends \PHPixie\Test\Testcase {
      * @param string $name
      * @param \Closure $func
      * @covers ::makeEmbeddedEntity
-     * @covers <protected>
+     * @covers ::<protected>
      * @dataProvider providerEmbeddedEntity
      */
     public function testMakeEmbeddedEntity($name, $func) {

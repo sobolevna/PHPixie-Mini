@@ -33,8 +33,8 @@ class BuilderTest extends \PHPixie\Test\Testcase {
     }
     
     /**
-     * @covers ::configuation
-     * @covers <protected>
+     * @covers ::configuration
+     * @covers ::<protected>
      */
     public function testConfiguration() {
         $this->assertInstance($this->builder->configuration(), 
@@ -44,7 +44,7 @@ class BuilderTest extends \PHPixie\Test\Testcase {
     
     /**
      * @covers ::assets
-     * @covers <protected>
+     * @covers ::<protected>
      */
     public function testAssets() {
         $this->assertInstance($this->builder->assets(), 

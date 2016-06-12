@@ -43,7 +43,7 @@ class AssetsTest extends \PHPixie\Test\Testcase{
      * @covers ::root
      * @covers ::assetsRoot
      * @covers ::webRoot
-     * @covers <protected>
+     * @covers ::<protected>
      */
     public function testRoots() {
         $this->assertInstance($this->assets->root(), '\PHPixie\Filesystem\Root');
@@ -54,7 +54,7 @@ class AssetsTest extends \PHPixie\Test\Testcase{
     /**
      * @covers ::configStorage
      * @covers ::parameterStorage
-     * @covers <protected>
+     * @covers ::<protected>
      */
     public function testStorages() {
         $this->assertInstance($this->assets->configStorage(), '\PHPixie\Config\Storages\Type\Directory');

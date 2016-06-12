@@ -10,7 +10,7 @@ namespace PHPixie\Tests\ORMWrappers\User;
 
 /**
  * Description of RepositoryTest
- * @coversDefaultClass \PHPixie\ORMWrappers\User\Repository
+ * @coversDefaultClass \PHPixie\Micro\ORMWrappers\User\Repository
  * @author sobolevna
  */
 class RepositoryTest extends \PHPixie\Test\Testcase {
