@@ -66,7 +66,8 @@ class ActTest extends \PHPixie\Test\Testcase {
         $prep = $this->prepare($name, $value, 1);
         if ($prep) {
             $this->assertEquals(
-                $this->returnValue($prep()), $this->returnValue($this->act->{$name . 'Action'}($this->rqMock))
+                $this->returnValue($prep()), 
+                $this->returnValue($this->act->{$name . 'Action'}($this->rqMock))
             );
         }
     }

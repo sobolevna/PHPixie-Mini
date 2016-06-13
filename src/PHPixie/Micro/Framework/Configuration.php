@@ -9,6 +9,7 @@ class Configuration implements \PHPixie\Framework\Configuration {
      * @var Builder 
      */
     protected $builder;
+
     /**
      *
      * @var array
@@ -118,7 +119,7 @@ class Configuration implements \PHPixie\Framework\Configuration {
     public function socialConfig() {
         return $this->instance('socialConfig');
     }
-    
+
     /**
      * 
      * @return \PHPixie\Config\Storages\Type\Directory
@@ -126,7 +127,7 @@ class Configuration implements \PHPixie\Framework\Configuration {
     public function configStorage() {
         return $this->builder->assets()->configStorage();
     }
-    
+
     /**
      * 
      * @return \PHPixie\Filesystem\Root
@@ -244,6 +245,8 @@ class Configuration implements \PHPixie\Framework\Configuration {
             return $components->filesystem()->buildlocator(
                     $locatorConfig, $root1, new \PHPixie\Micro\TemplateLocator($settings)
             );
+        } else if ($projectBuilder = new \Project\Framework\Builder()) {
+            return $projectBuilder->configuration()->templateLocator();
         } else {
             $config = $this->configStorage()->slice('template.locator');
             return $components->filesystem()->buildLocator(
@@ -252,7 +255,7 @@ class Configuration implements \PHPixie\Framework\Configuration {
         }
     }
 
-/**
+    /**
      * 
      * @return \PHPixie\Slice\Type\Slice\Editable
      */

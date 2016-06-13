@@ -34,8 +34,7 @@
         "phpixie/processors": "3.*@dev",
         "phpixie/http": "3.*@dev",
         "psr/http-message": "1.*@dev",
-        "phpixie/http-processors": "3.*@dev",
-	"phpixie/bundle-framework": "3.*@dev"
+        "phpixie/http-processors": "3.*@dev"
     },
     "require-dev": {
         "phpixie/test": "3.*@dev"
@@ -44,5 +43,11 @@
 		"branch-alias": {
 			"dev-master": "3.*-dev"
 		}
-	}
+	},
+	"repositories":[
+        {
+            "type":"git",
+            "url":"https://github.com/sobolevna/PHPixie-Mini"
+        }
+    ]
 }

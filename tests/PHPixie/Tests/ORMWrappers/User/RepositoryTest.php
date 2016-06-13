@@ -19,17 +19,25 @@ class RepositoryTest extends \PHPixie\Test\Testcase {
      * @var \PHPixie\Micro\ORMWrappers\User\Repository
      */
     protected $stack;
+    
+    protected $entity;
 
     public function setUp() {
         $builder = new \PHPixie\Micro\Framework\Builder();
         $rep = $this->quickMock('PHPixie\ORM\Models\Type\Database\Repository');
+        $query = $this->quickMock('PHPixie\ORM\Models\Type\Database\Query');
+        $this->entity = $this->quickMock('\PHPixie\ORM\Models\Type\Database\Implementation\Entity');
+        $this->method($query, 'findOne', $this->entity);
+        $this->method($query, 'orWhere', null);
+        $this->method($rep, 'query', $query);
         $this->stack = $builder->configuration()->ormWrappers()->userRepository($rep);
     }
     
     /**
-     * @covers ::__construct
+     * @covers ::getByLogin
+     * @covers ::<protected>
      */
-    public function testConstruct() {
-        $this->assertInstance($this->stack, '\PHPixie\Micro\ORMWrappers\User\Repository');
+    public function testLoginFields() {
+        $this->assertEquals($this->stack->getByLogin('name'), $this->entity);
     }
 }

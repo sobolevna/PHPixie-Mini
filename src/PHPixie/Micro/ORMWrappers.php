@@ -5,7 +5,6 @@ namespace PHPixie\Micro;
 class ORMWrappers extends \PHPixie\ORM\Wrappers\Implementation {
 
     protected $functions = array();
-    
     protected $databaseEntities = array('user');
     protected $databaseRepositories = array('user');
 
@@ -16,42 +15,60 @@ class ORMWrappers extends \PHPixie\ORM\Wrappers\Implementation {
             $this->$name = $data;
         }
     }
-        
+
     public function __call($method, $args) {
         if (!method_exists($this, $method) && isset($this->functions[$method])) {
-
             return call_user_func_array($this->functions[$method], $args);
         }
     }
 
+    /**
+     * 
+     * @param string $name
+     * @param \Closure $func
+     */
     public function makeRepository($name, $func) {
         $this->databaseRepositories[] = $name;
-        $this->{$name.'Repository'} = $func;
+        $this->{$name . 'Repository'} = $func;
     }
-    
+
+    /**
+     * 
+     * @param string $name
+     * @param \Closure $func
+     */
     public function makeQuery($name, $func) {
         $this->databaseQueries[] = $name;
-        $this->{$name.'Query'} = $func;
+        $this->{$name . 'Query'} = $func;
     }
-    
+
+    /**
+     * 
+     * @param string $name
+     * @param \Closure $func
+     */
     public function makeEntity($name, $func) {
         $this->databaseEntities[] = $name;
 
-        $this->__set($name.'Entity', $func);
+        $this->__set($name . 'Entity', $func);
     }
-    
+
+    /**
+     * 
+     * @param string $name
+     * @param \Closure $func
+     */
     public function makeEmbeddedEntity($name, $func) {
         $this->embeddedEntities[] = $name;
-        $this->{$name.'Entity'} = $func;
+        $this->{$name . 'Entity'} = $func;
     }
-    
-    public function userEntity($entity)
-    {
+
+    public function userEntity($entity) {
         return new ORMWrappers\User\Entity($entity);
     }
 
-    public function userRepository($repository)
-    {
+    public function userRepository($repository) {
         return new ORMWrappers\User\Repository($repository);
     }
+
 }

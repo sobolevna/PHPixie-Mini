@@ -213,7 +213,7 @@ class Framework extends \PHPixie\Framework {
 
     /**
      * 
-     * @param mixed $flag Flag that can handle creating template directory and .htacess file
+     * @param mixed $flag Flag that can handle creating template directory and .htaccess file
      */
     public function run($flag = 0) {
         if ($flag) {
@@ -227,6 +227,7 @@ class Framework extends \PHPixie\Framework {
         $root = realpath(dirname(filter_input(INPUT_SERVER, 'SCRIPT_FILENAME')));
         $access = file_exists($root . '/.htaccess');
         $tpl = file_exists($root . '/template');
+        $link = file_exists($root . '/web') && is_link($root . '/web');
         if (!$access) {
             echo $this->errorReport('.htaccess file');
             $file = fopen($root . '/.htaccess', 'w');
@@ -245,6 +246,9 @@ TEXT;
 
             mkdir($root . '/template');
         }
+        if (!$link) {
+            \symlink($target, $link)
+        }
     }
 
     protected function errorReport($param) {
@@ -257,4 +261,7 @@ TEXT;
             ";
     }
 
+    public function getBundleTemplate($param) {
+        
+    }
 }

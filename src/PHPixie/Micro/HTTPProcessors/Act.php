@@ -45,7 +45,6 @@ class Act extends \PHPixie\HTTPProcessors\Processor\Actions\Attribute {
 
     public function __call($method, $args) {
         if (isset($this->functions[$method])) {
-
             return call_user_func_array($this->functions[$method], $args);
         }
     }
