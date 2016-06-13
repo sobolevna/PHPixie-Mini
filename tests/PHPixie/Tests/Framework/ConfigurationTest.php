@@ -70,12 +70,13 @@ class ConfigurationTest extends \PHPixie\Test\Testcase {
      * @covers ::templateConfig
      * @covers ::socialConfig
      * @covers ::httpRouteResolver
+     * @covers ::imageDefaultDriver
      * @covers ::<protected>
      */
     public function testConfigs() {
         $array = [
             'databaseConfig', 'ormConfig', 'authConfig', 'httpConfig', 
-            'templateConfig', 'socialConfig'
+            'templateConfig', 'socialConfig', 'imageDefaultDriver'
         ];
         foreach ($array as $method) {
             $this->assertInstance(

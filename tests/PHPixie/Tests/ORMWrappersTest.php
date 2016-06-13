@@ -30,6 +30,8 @@ class ORMWrappersTest extends \PHPixie\Test\Testcase {
      * @param string $name
      * @param \Closure $func
      * @covers ::makeRepository
+     * @covers ::__set
+     * @covers ::__call
      * @covers ::<protected>
      * @dataProvider providerRepository
      */
@@ -45,7 +47,9 @@ class ORMWrappersTest extends \PHPixie\Test\Testcase {
     public function providerRepository() {
         return array(
             [null, null],
-            ['test', function($p){return new \PHPixie\ORM\Wrappers\Type\Database\Repository($p);}]
+            ['test', function($p) {
+                    return new \PHPixie\ORM\Wrappers\Type\Database\Repository($p);
+                }]
         );
     }
 
@@ -53,7 +57,9 @@ class ORMWrappersTest extends \PHPixie\Test\Testcase {
      * 
      * @param string $name
      * @param \Closure $func
-     * @covers ::makeEntity
+     * @covers ::makeEntity 
+     * @covers ::__set
+     * @covers ::__call
      * @covers ::<protected>
      * @dataProvider providerEntity
      */
@@ -65,11 +71,13 @@ class ORMWrappersTest extends \PHPixie\Test\Testcase {
             $this->assertInstance($this->wrappers->{$name . 'Entity'}($mock), '\PHPixie\ORM\Wrappers\Type\Database\Entity');
         }
     }
-    
+
     public function providerEntity() {
         return array(
             [null, null],
-            ['test', function($p){return new \PHPixie\ORM\Wrappers\Type\Database\Entity($p);}]
+            ['test', function($p) {
+                    return new \PHPixie\ORM\Wrappers\Type\Database\Entity($p);
+                }]
         );
     }
 
@@ -78,6 +86,8 @@ class ORMWrappersTest extends \PHPixie\Test\Testcase {
      * @param string $name
      * @param \Closure $func
      * @covers ::makeQuery
+     * @covers ::__set
+     * @covers ::__call
      * @covers ::<protected>
      * @dataProvider providerQuery
      */
@@ -89,11 +99,13 @@ class ORMWrappersTest extends \PHPixie\Test\Testcase {
             $this->assertInstance($this->wrappers->{$name . 'Query'}($mock), '\PHPixie\ORM\Wrappers\Type\Database\Query');
         }
     }
-    
+
     public function providerQuery() {
         return array(
             [null, null],
-            ['test', function($p){return new \PHPixie\ORM\Wrappers\Type\Database\Query($p);}]
+            ['test', function($p) {
+                    return new \PHPixie\ORM\Wrappers\Type\Database\Query($p);
+                }]
         );
     }
 
@@ -102,6 +114,8 @@ class ORMWrappersTest extends \PHPixie\Test\Testcase {
      * @param string $name
      * @param \Closure $func
      * @covers ::makeEmbeddedEntity
+     * @covers ::__set
+     * @covers ::__call
      * @covers ::<protected>
      * @dataProvider providerEmbeddedEntity
      */
@@ -113,12 +127,54 @@ class ORMWrappersTest extends \PHPixie\Test\Testcase {
             $this->assertInstance($this->wrappers->{$name . 'Entity'}($mock), '\PHPixie\ORM\Wrappers\Type\Embedded\Entity');
         }
     }
-    
+
     public function providerEmbeddedEntity() {
         return array(
             [null, null],
-            ['test', function($p){return new \PHPixie\ORM\Wrappers\Type\Embedded\Entity($p);}]
+            ['test', function($p) {
+                    return new \PHPixie\ORM\Wrappers\Type\Embedded\Entity($p);
+                }]
         );
+    }
+
+    /**
+     * @covers ::userEntity
+     * @covers ::userRepository
+     * @covers ::__call
+     */
+    public function testUser() {
+        $mock = $this->quickMock('PHPixie\ORM\Models\Type\Database');
+        $this->assertInstance(
+            $this->wrappers->userEntity($mock), 
+            'PHPixie\Micro\ORMWrappers\User\Entity'
+        );
+        $this->assertInstance(
+            $this->wrappers->userRepository($mock), 
+            'PHPixie\Micro\ORMWrappers\User\Repository'
+        );
+    }
+
+    /**
+     * @covers ::__set
+     * @covers ::__call
+     */
+    public function testSetCall() {
+        if (!property_exists($this, 'prop1')) {
+            $this->wrappers->prop1 = 1;
+            $this->assertEquals($this->wrappers->prop1, 1);
+        }
+        if (!property_exists($this, 'prop2') && !method_exists($this, 'prop2')) {
+            $callback =  function(){return true;};
+            $this->wrappers->prop2 =$callback;
+            $this->assertEquals($this->wrappers->prop2(), $callback());
+        }
+        if (method_exists($this, 'userEntity')) {
+            $mock = $this->quickMock('PHPixie\ORM\Models\Type\Database');
+            $this->assertInstance(
+                $this->wrappers->userEntity($mock), 
+                'PHPixie\Micro\ORMWrappers\User\Entity'
+            );
+        }
     }
 
 }

@@ -23,7 +23,14 @@ class AuthRepositoriesTest extends \PHPixie\Test\Testcase {
 
     public function setUp() {
         $builder = new \PHPixie\Micro\Framework\Builder();
-        $this->stack = new \PHPixie\Micro\Framework\AuthRepositories($builder);
+        $this->stack = $builder->configuration()->authRepositories();
+    }
+    
+    /**
+     * @covers ::__construct
+     */
+    public function testConstruct() {
+        $this->assertInstance($this->stack, '\PHPixie\Micro\Framework\AuthRepositories');
     }
     
     /**

@@ -48,7 +48,6 @@ class Act extends \PHPixie\HTTPProcessors\Processor\Actions\Attribute {
 
             return call_user_func_array($this->functions[$method], $args);
         }
-        return call_user_func_array($this->$method, $args);
     }
 
     public function isProcessable($request) {
@@ -59,12 +58,6 @@ class Act extends \PHPixie\HTTPProcessors\Processor\Actions\Attribute {
     public function process($request) {
         $action = $request->attributes()->get('action');
         return $this->functions[$action . 'Action']($request);
-    }
-
-    public function defaultAction($request) {
-        $container = $this->template->get('greet');
-        $container->message = "Have fun coding!";
-        return $container;
     }
 
     protected function domain() {

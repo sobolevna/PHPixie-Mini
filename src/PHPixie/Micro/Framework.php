@@ -3,12 +3,11 @@
 namespace PHPixie\Micro;
 
 class Framework extends \PHPixie\Framework {
-
+    
     /**
-     *
-     * @var array 
+     * @var \PHPixie\Micro\Framework\Builder
      */
-    protected $routeCount = array();
+    protected $builder;
 
     /**
      * 
@@ -26,19 +25,18 @@ class Framework extends \PHPixie\Framework {
      */
     public function route($ptrn, $func) {
         $pattern = $this->sanitizeRoute($ptrn, $func);
-        $cnt = count($this->routeCount);
-        $this->routeCount[] = 'r' . $cnt;
-        $id = $this->routeCount[$cnt];
         $config = $this->builder->configuration()
                 ->httpConfig()->slice('resolver.resolvers');
+        $cnt = count($config->getData());
+        $id  = 'r' . $cnt;
         $config->set(
             $id, array(
-            'type' => 'pattern',
-            'path' => $pattern,
-            'defaults' => array(
-                'processor' => 'act',
-                'action' => $id
-            )
+                'type' => 'pattern',
+                'path' => $pattern,
+                'defaults' => array(
+                    'processor' => 'act',
+                    'action' => $id
+                )
             )
         );
         $proc = $this->builder->configuration()

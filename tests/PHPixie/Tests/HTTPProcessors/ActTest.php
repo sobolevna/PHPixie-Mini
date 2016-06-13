@@ -26,8 +26,6 @@ class ActTest extends \PHPixie\Test\Testcase {
      * @var \PHPixie\Micro\Framework\Builder 
      */
     protected $builder;
-
-      
     protected $rqMock;
 
     public function setUp() {
@@ -53,42 +51,37 @@ class ActTest extends \PHPixie\Test\Testcase {
     public function testIsProcessable($name, $value) {
         $prep = $this->prepare($name, $value);
         if ($prep) {
-            if (!is_callable($value)) {
-                $this->assertException($prep, '\PHPUnit_Framework_Error');
-            } else {
-                $this->assertTrue($prep());
-            }
+            $this->assertTrue($prep());
         }
     }
 
     /**
      * @covers ::__set
      * @covers ::__call
-     * @covers ::isProcessable
+     * @covers ::process
      * @covers ::<protected>
      * @dataProvider providerAct
      */
     public function testProcess($name, $value) {
         $prep = $this->prepare($name, $value, 1);
         if ($prep) {
-            if (!is_callable($value)) {
-                $this->assertException($prep, '\PHPUnit_Framework_Error');
-            } else {
-                $this->assertEquals(
-                    $this->returnValue($prep()), 
-                    $this->returnValue($this->act->{$name.'Action'}($this->rqMock))
-                );
-            }
+            $this->assertEquals(
+                $this->returnValue($prep()), $this->returnValue($this->act->{$name . 'Action'}($this->rqMock))
+            );
         }
     }
 
     public function providerAct() {
         return array(
             [null, null],
-            ['', function($param) {return $param;}],
+            ['', function($param) {
+                    return $param;
+                }],
             ['test', null],
             ['test', 'test'],
-            ['test', function($param) {return $param;}]
+            ['test', function($param) {
+                    return $param;
+                }]
         );
     }
 
@@ -104,7 +97,7 @@ class ActTest extends \PHPixie\Test\Testcase {
         if (!is_string($name) || !$name || !$value || !is_callable($value)) {
             return null;
         }
-        $this->act->{$name.'Action'} = $value;
+        $this->act->{$name . 'Action'} = $value;
         $proc = $this->act;
         $rqMock = $this->quickMock('\PHPixie\HTTP\Request');
         $g = $this->quickMock('\PHPixie\Slice\Type\ArrayData');

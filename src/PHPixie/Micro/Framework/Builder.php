@@ -43,14 +43,15 @@ class Builder extends \PHPixie\Framework\Builder {
      * @throws \Exception
      */
     protected function getRootDirectory() {
-        if (file_exists(__DIR__ . '/../../../../vendor') && dirname(__DIR__ . '/../../../../../') != 'vendor'
-        ) {
-            $path = realpath(__DIR__ . '/../../../../');
-        } elseif (dirname(__DIR__ . '/../../../../../') == 'vendor') {
-            $path = realpath(__DIR__ . '/../../../../../../../');
+        $root1 = realpath(__DIR__ . '/../../../../');
+        $root2 = realpath(__DIR__ . '/../../../../../../../');
+        if (file_exists($root1. '/vendor')) {
+            $path = $root1;
+        } elseif (file_exists ($root2.'/vendor')) {
+            $path = $root2;
         } else {
             throw new \Exception('Invalid filesystem root');
         }
-        return $path;
+        return $root1;
     }
 }

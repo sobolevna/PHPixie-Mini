@@ -26,13 +26,6 @@ class BuilderTest extends \PHPixie\Test\Testcase {
     }
     
     /**
-     * @covers ::__construct
-     */
-    public function testConstructor() {
-        
-    }
-    
-    /**
      * @covers ::configuration
      * @covers ::<protected>
      */
