@@ -247,7 +247,7 @@ TEXT;
             mkdir($root . '/template');
         }
         if (!$link) {
-            \symlink($target, $link)
+            \symlink($target, $link);
         }
     }
 
